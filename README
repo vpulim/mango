@@ -1,0 +1,9 @@
+To use mango with your Django project, just add these lines to your settings.py file:
+
+SESSION_ENGINE = 'mango.session'
+AUTHENTICATION_BACKENDS = ('mango.auth.Backend',)
+
+Also, make sure 'MIDDLEWARE_CLASSES' contains:
+
+'django.contrib.sessions.middleware.SessionMiddleware'
+'django.contrib.auth.middleware.AuthenticationMiddleware'
