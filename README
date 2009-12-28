@@ -1,6 +1,6 @@
 Installation
 ------------
-Make sure you have the latest version of pymongo installed (http://api.mongodb.org/python/).
+Make sure you have the latest version of pymongo installed (http://api.mongodb.org/python).
 
 To install mango:
 
