@@ -1,4 +1,4 @@
-from mango.database import Model, db
+from mango import Model, database as db
 from django.utils.encoding import smart_str
 from django.contrib import auth
 from django.contrib.auth.models import UNUSABLE_PASSWORD, get_hexdigest, check_password

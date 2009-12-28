@@ -1,7 +1,7 @@
 import datetime
 from django.contrib.sessions.backends.base import SessionBase, CreateError
 from django.utils.encoding import force_unicode
-from mango.database import db, OperationFailure
+from mango import database as db, OperationFailure
 
 class SessionStore(SessionBase):
     """
