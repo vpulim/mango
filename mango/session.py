@@ -5,7 +5,7 @@ from mango import database as db, OperationFailure
 
 class SessionStore(SessionBase):
     """
-    Implements database session store.
+    Implements MongoDB session store.
     """
     def load(self):
         s = db.sessions.find_one( { 
@@ -53,7 +53,7 @@ class SessionStore(SessionBase):
                 db.sessions.save(obj, safe=True)
             else:
                 db.sessions.update({'session_key': self.session_key},
-                                   obj, upsert=True, safe=True)
+                                   obj, upsert=True)
         except OperationFailure, e:
             if must_create:
                 raise CreateError
@@ -64,4 +64,4 @@ class SessionStore(SessionBase):
             if self._session_key is None:
                 return
             session_key = self._session_key
-        db.sessions.remove({'session_key': session_key}, safe=True)
+        db.sessions.remove({'session_key': session_key})
