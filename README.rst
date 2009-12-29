@@ -60,6 +60,12 @@ To delete a user::
    >>> user = User.get({'username': 'john'})
    >>> user.delete()
 
+If you want direct access to the database connection::
+
+   >>> from mango import database as db
+   >>> db.users.find()      
+   >>> db.sessions.find()   
+
 Limitations
 ===========
 Support for permissions and groups is not available yet, but is coming soon.
