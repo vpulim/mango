@@ -8,11 +8,11 @@ database = _connection[settings.MONGODB_NAME] if _connection else None
 
 class Model(object):
 
+    collection = None
     valid_fields = []
 
-    def __init__(self, result, collection):
+    def __init__(self, result):
         object.__setattr__(self, 'fields', result)
-        object.__setattr__(self, 'collection', collection)
         if '_id' in result:
             object.__setattr__(self, 'id', result['_id'])
 
@@ -32,7 +32,17 @@ class Model(object):
 
     def save(self):
         fields = self.__dict__['fields']
-        collection = self.__dict__['collection']
-        _id = collection.save(fields, safe=True)
+        _id = self.__class__.collection.save(fields, safe=True)
         object.__setattr__(self, 'id', _id)
         
+    def delete(self):
+        self.__class__.collection.remove({'_id': self.__dict__['id']})
+        object.__setattr__(self, 'id', None)
+
+    @classmethod
+    def get(cls, spec):
+        if cls.collection:
+            result = cls.collection.find_one(spec)
+            if result:
+                return cls(result)
+        return None
