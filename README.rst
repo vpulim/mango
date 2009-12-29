@@ -23,8 +23,8 @@ Also, make sure 'MIDDLEWARE_CLASSES' contains the session and authentication mid
 
    MIDDLEWARE_CLASSES = (
       ...
-      'django.contrib.sessions.middleware.SessionMiddleware'
-      'django.contrib.auth.middleware.AuthenticationMiddleware'
+      'django.contrib.sessions.middleware.SessionMiddleware',
+      'django.contrib.auth.middleware.AuthenticationMiddleware',
       ...
    )
 
