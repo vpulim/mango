@@ -11,9 +11,10 @@ class Model(object):
     valid_fields = []
 
     def __init__(self, result, collection):
-        object.__setattr__(self, 'id', result['_id'])
         object.__setattr__(self, 'fields', result)
         object.__setattr__(self, 'collection', collection)
+        if '_id' in result:
+            object.__setattr__(self, 'id', result['_id'])
 
     def __getattr__(self, attr):
         try:
@@ -32,4 +33,6 @@ class Model(object):
     def save(self):
         fields = self.__dict__['fields']
         collection = self.__dict__['collection']
-        collection.save(fields, safe=True)
+        _id = collection.save(fields, safe=True)
+        object.__setattr__(self, 'id', _id)
+        

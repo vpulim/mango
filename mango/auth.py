@@ -2,12 +2,50 @@ from mango import Model, database as db
 from django.utils.encoding import smart_str
 from django.contrib import auth
 from django.contrib.auth.models import UNUSABLE_PASSWORD, get_hexdigest, check_password
+import datetime
 import urllib
+
+class UserManager(object):
+    def create_user(self, username, email, password=None):
+        "Creates and saves a User with the given username, e-mail and password."
+        now = datetime.datetime.now()
+        user = User({'username': username, 
+                     'first_name': '', 
+                     'last_name': '', 
+                     'email': email.strip().lower(), 
+                     'password': 'placeholder', 
+                     'is_staff': False, 
+                     'is_active': True, 
+                     'is_superuser': False, 
+                     'last_login': now,
+                     'date_joined': now,
+                     }, db.users)
+        if password:
+            user.set_password(password)
+        else:
+            user.set_unusable_password()
+        user.save()
+        return user
+
+    def create_superuser(self, username, email, password):
+        u = self.create_user(username, email, password)
+        u.is_staff = True
+        u.is_active = True
+        u.is_superuser = True
+        u.save()
+        return u
+
+    def make_random_password(self, length=10, allowed_chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'):
+        "Generates a random password with the given length and given allowed_chars"
+        # Note that default value of allowed_chars does not have "I" or letters
+        # that look like it -- just to avoid confusion.
+        from random import choice
+        return ''.join([choice(allowed_chars) for i in range(length)])
 
 class User(Model):
     valid_fields = [
-        'first_name',
         'username',
+        'first_name',
         'last_name',
         'email',
         'password',
@@ -19,6 +57,8 @@ class User(Model):
         'groups',
         'user_permissions',
         ]
+
+    objects = UserManager()
 
     def __unicode__(self):
         return self.username
@@ -128,8 +168,6 @@ class Backend(object):
 
     def get_user(self, user_id):
         result = db.users.find_one( {'_id': user_id} )
-        if result:
-            return User(result, db.users)
-        return None
+        return User(result, db.users) if result else None
 
     
