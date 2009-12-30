@@ -9,35 +9,37 @@ database = _connection[settings.MONGODB_NAME] if _connection else None
 class Model(object):
 
     collection = None
-    valid_fields = []
 
     def __init__(self, result):
-        object.__setattr__(self, 'fields', result)
-        if '_id' in result:
-            object.__setattr__(self, 'id', result['_id'])
+        self._fields = result
 
     def __getattr__(self, attr):
         try:
-            fields = self.__dict__['fields']
-            return fields[attr]
+            return self._fields[attr]
         except KeyError:
             return None
 
     def __setattr__(self, attr, value):
-        if attr in self.__class__.__dict__['valid_fields']:
-            fields = self.__dict__['fields']
-            fields[attr] = value
+        if attr in ['id', '_fields']:
+            object.__setattr__(self, attr, value)
         else:
-            self.__dict__[attr] = value
+            self._fields[attr] = value
 
     def save(self):
-        fields = self.__dict__['fields']
-        _id = self.__class__.collection.save(fields, safe=True)
-        object.__setattr__(self, 'id', _id)
+        self._fields['_id'] = self.collection.save(self._fields, safe=True)
         
     def delete(self):
-        self.__class__.collection.remove({'_id': self.__dict__['id']})
-        object.__setattr__(self, 'id', None)
+        self.collection.remove({'_id': self._fields.get('_id', None)})
+        self.id = None
+
+    def get_id(self):
+        return self._fields.get('_id', None)
+
+    def get_doc(self):
+        return self._fields
+
+    id = property(get_id)
+    doc = property(get_doc)
 
     @classmethod
     def get(cls, spec):
