@@ -5,7 +5,7 @@ from django.contrib.auth.models import UNUSABLE_PASSWORD, get_hexdigest, check_p
 import datetime
 import urllib
 
-def create_user(self, username, email, password=None):
+def create_user(username, email, password=None):
     "Creates and saves a User with the given username, e-mail and password."
     now = datetime.datetime.now()
     user = User({'username': username, 
@@ -23,7 +23,7 @@ def create_user(self, username, email, password=None):
         user.set_password(password)
     else:
         user.set_unusable_password()
-        user.save()
+    user.save()
     return user
 
 class User(Model):
