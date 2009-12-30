@@ -32,6 +32,10 @@ class Model(object):
         self.collection.remove({'_id': self._fields.get('_id', None)})
         self.id = None
 
+    def set(self, fields):
+        self._fields.update(fields)
+        self.collection.update({'_id':self.id}, {'$set': fields})
+
     def get_id(self):
         return self._fields.get('_id', None)
 
