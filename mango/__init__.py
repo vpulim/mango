@@ -32,9 +32,9 @@ class Model(object):
         self.collection.remove({'_id': self._fields.get('_id', None)})
         self.id = None
 
-    def set(self, fields):
-        self._fields.update(fields)
-        self.collection.update({'_id':self.id}, {'$set': fields})
+    def set(self, fields, safe=False):
+        self.collection.update({'_id':self.id}, {'$set': fields}, safe=safe)
+        self._fields = self.collection.find_one({'_id':self.id})
 
     def get_id(self):
         return self._fields.get('_id', None)
