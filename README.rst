@@ -28,7 +28,7 @@ Django sessions should now work exactly as described in the Django sessions_ doc
 
 .. _sessions: http://docs.djangoproject.com/en/dev/topics/http/sessions/
 
-For the most part, Django authentication should also work as described in the Django authentication_ documentation.  However, since we no longer have Django's ORM model available, you can't use the User model described in the Django documentation to directly manipulate User objects.  Instead, mango provides its own User class that you should use instead.  All of Django's original User class instance methods are available in mango's User class (is_authenticated(), set_password(), check_password(), etc...).  However, there is longer a User.objects attribute.  Instead, many of the administrative function such as create_user() are now class methods of User.
+For the most part, Django authentication should also work as described in the Django authentication_ documentation.  However, since many of the administrative functions rely on Django's ORM model (which we no longer have with mongodb), you can't use the User model described in the Django documentation to directly manipulate User objects.  Instead, mango provides its own User class that you should use instead.  All of Django's original User class instance methods are available in mango's User class (is_authenticated(), set_password(), check_password(), etc...).  However, there is longer a User.objects attribute.  Instead, many of the administrative function such as create_user() are now class methods of User.
 
 .. _authentication: http://docs.djangoproject.com/en/dev/topics/auth/
 
