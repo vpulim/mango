@@ -5,27 +5,6 @@ from django.contrib.auth.models import UNUSABLE_PASSWORD, get_hexdigest, check_p
 import datetime
 import urllib
 
-def create_user(username, email, password=None):
-    "Creates and saves a User with the given username, e-mail and password."
-    now = datetime.datetime.now()
-    user = User({'username': username, 
-                 'first_name': '', 
-                 'last_name': '', 
-                 'email': email.strip().lower(), 
-                 'password': 'placeholder', 
-                 'is_staff': False, 
-                 'is_active': True, 
-                 'is_superuser': False, 
-                 'last_login': now,
-                 'date_joined': now,
-                 })
-    if password:
-        user.set_password(password)
-    else:
-        user.set_unusable_password()
-    user.save()
-    return user
-
 class User(Model):
     collection = db.users
     valid_fields = [
@@ -136,6 +115,28 @@ class User(Model):
 
     def get_profile(self):
         raise SiteProfileNotAvailable
+
+    @classmethod
+    def create_user(cls, username, email, password=None):
+        "Creates and saves a User with the given username, e-mail and password."
+        now = datetime.datetime.now()
+        user = cls({'username': username, 
+                    'first_name': '', 
+                    'last_name': '', 
+                    'email': email.strip().lower(), 
+                    'password': 'placeholder', 
+                    'is_staff': False, 
+                    'is_active': True, 
+                    'is_superuser': False, 
+                    'last_login': now,
+                    'date_joined': now,
+                    })
+        if password:
+            user.set_password(password)
+        else:
+            user.set_unusable_password()
+        user.save()
+        return user
 
 class Backend(object):
     """
