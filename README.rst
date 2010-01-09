@@ -32,14 +32,14 @@ Django sessions should now work exactly as described in the Django sessions_ doc
 
 .. _sessions: http://docs.djangoproject.com/en/dev/topics/http/sessions/
 
-For the most part, Django authentication should also work as described in the Django authentication_ documentation.  However, since we no longer have Django's ORM model available, you can't use the User model described in the Django documentation to directly manipulate User objects.  Instead, mango provides its own User class that you should use instead.  All of Django's original User class instance methods are available in mango's User class (is_authenticated(), set_password(), check_password(), etc...).  However, there is longer a User.objects attribute.
+For the most part, Django authentication should also work as described in the Django authentication_ documentation.  However, since we no longer have Django's ORM model available, you can't use the User model described in the Django documentation to directly manipulate User objects.  Instead, mango provides its own User class that you should use instead.  All of Django's original User class instance methods are available in mango's User class (is_authenticated(), set_password(), check_password(), etc...).  However, there is longer a User.objects attribute.  Instead, many of the administrative function such as create_user() are now class methods of User.
 
 .. _authentication: http://docs.djangoproject.com/en/dev/topics/auth/
 
-Instead, to create a user::
+For instance, to create a user::
 
-   >>> from mango.auth import create_user
-   >>> user = create_user('john', 'lennon@thebeatles.com', 'johnpassword')
+   >>> from mango.auth import User
+   >>> user = User.create_user('john', 'lennon@thebeatles.com', 'johnpassword')
    
 To find a user::
 
@@ -60,7 +60,7 @@ To delete a user::
    >>> user = User.get({'username': 'john'})
    >>> user.delete()
 
-If you want direct access to the database connection::
+If you want direct access to the database connection from anywhere in your Django app::
 
    >>> from mango import database as db
    >>> db.users.find()      
