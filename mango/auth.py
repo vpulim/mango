@@ -7,20 +7,6 @@ import urllib
 
 class User(Model):
     collection = db.users
-    valid_fields = [
-        'username',
-        'first_name',
-        'last_name',
-        'email',
-        'password',
-        'is_staff',
-        'is_active',
-        'is_superuser',
-        'last_login',
-        'date_joined',
-        'groups',
-        'user_permissions',
-        ]
 
     def __unicode__(self):
         return self.username
