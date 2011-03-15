@@ -48,16 +48,10 @@ class SessionStore(SessionBase):
             'session_data': self.encode(self._get_session(no_load=must_create)),
             'expire_date': self.get_expiry_date()
             }
-        try:
-            if must_create:
-                db.sessions.save(obj, safe=True)
-            else:
-                db.sessions.update({'session_key': self.session_key},
-                                   obj, upsert=True)
-        except OperationFailure, e:
+        if self.exists(self.session_key):
             if must_create:
                 raise CreateError
-            raise
+        db.sessions.update({'session_key': self.session_key}, obj, upsert=True)
 
     def delete(self, session_key=None):
         if session_key is None:
