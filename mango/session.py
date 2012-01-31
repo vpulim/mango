@@ -52,7 +52,11 @@ class SessionStore(SessionBase):
         if self.exists(self.session_key):
             if must_create:
                 raise CreateError
-        db.sessions.update({'session_key': self.session_key}, obj, upsert=True)
+        db.sessions.update(
+                {'session_key': self.session_key},
+                {'$set': obj},
+                upsert=True,
+                )
 
     def delete(self, session_key=None):
         if session_key is None:
