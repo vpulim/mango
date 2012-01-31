@@ -14,6 +14,7 @@ class SessionStore(SessionBase):
         if s:
             return self.decode(force_unicode(s['session_data']))
         else:
+            self.create()
             return {}
 
     def exists(self, session_key):
@@ -48,10 +49,14 @@ class SessionStore(SessionBase):
             'session_data': self.encode(self._get_session(no_load=must_create)),
             'expire_date': self.get_expiry_date()
             }
-        if self.exists(self.session_key):
-            if must_create:
-                raise CreateError
-        db.sessions.update({'session_key': self.session_key}, obj, upsert=True)
+        res = db.sessions.update(
+                {'session_key': self.session_key},
+                {'$set': obj},
+                upsert=True,
+                safe=True,
+                )
+        if res['err'] is not None and must_create:
+            raise CreateError
 
     def delete(self, session_key=None):
         if session_key is None:
